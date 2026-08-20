@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { UtensilsCrossed, Menu, X, ChevronDown, Check } from 'lucide-react';
+import { UtensilsCrossed, Menu, X, ChevronDown, Check, Plus } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { USFlag, CambodiaFlag } from '@/components/Flags';
 
@@ -58,7 +58,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Navigation Links - Clean Text with Bottom Colored Line Indicator */}
+          {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-8 font-khmer">
             {navLinks.map((link) => {
               const active = isActive(link.href);
@@ -81,14 +81,14 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Action Buttons: Language Switcher Dropdown & Add Recipe */}
+          {/* Action Buttons: Language Switcher Dropdown & Modern Rounded Add Recipe */}
           <div className="hidden md:flex items-center gap-3">
             
-            {/* Language Selector Pill */}
+            {/* Language Selector */}
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className="flex items-center gap-2 rounded-full border border-slate-200 bg-white hover:bg-slate-50 px-3.5 py-1.5 text-xs font-bold text-slate-800 shadow-sm transition-all focus:outline-none"
+                className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-3.5 py-2 text-xs font-bold text-slate-800 shadow-sm transition-all focus:outline-none"
               >
                 {language === 'en' ? <USFlag className="w-5 h-3.5" /> : <CambodiaFlag className="w-5 h-3.5" />}
                 <span>{language === 'en' ? 'EN' : 'KM'}</span>
@@ -133,11 +133,13 @@ export default function Navbar() {
               )}
             </div>
 
+            {/* Redesigned Modern Rounded Add Recipe Button */}
             <Link
               href="/recipes/new"
-              className="px-4 py-2 rounded-full bg-slate-900 text-white hover:bg-slate-800 text-sm font-medium shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] font-khmer"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 text-sm font-medium shadow-md border border-slate-800 transition-all hover:scale-[1.02] active:scale-[0.98] font-khmer"
             >
-              {t.addRecipe}
+              <Plus className="w-4 h-4 text-amber-400" />
+              <span>{t.addRecipe}</span>
             </Link>
           </div>
 
@@ -146,7 +148,7 @@ export default function Navbar() {
             
             <button
               onClick={() => setLanguage(language === 'en' ? 'km' : 'en')}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm text-xs font-bold text-slate-800"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 shadow-sm text-xs font-bold text-slate-800"
             >
               {language === 'en' ? <USFlag className="w-4 h-3" /> : <CambodiaFlag className="w-4 h-3" />}
               <span>{language === 'en' ? 'EN' : 'KM'}</span>
@@ -184,9 +186,10 @@ export default function Navbar() {
             <Link
               href="/recipes/new"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-center w-full px-4 py-3 rounded-xl bg-slate-900 text-white font-medium shadow-sm"
+              className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-slate-900 text-white font-medium shadow-sm"
             >
-              {t.addRecipe}
+              <Plus className="w-4 h-4 text-amber-400" />
+              <span>{t.addRecipe}</span>
             </Link>
           </div>
         </div>
