@@ -1,10 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Clock, Flame, Users, Tag, ExternalLink, ArrowLeft, Utensils } from 'lucide-react';
+import { Clock, Flame, Users, ExternalLink, ArrowLeft, Utensils } from 'lucide-react';
 import IngredientList from '@/components/IngredientList';
 import InstructionSteps from '@/components/InstructionSteps';
 import ReviewSection, { Review } from '@/components/ReviewSection';
+import { query } from '@/lib/db';
 
 interface RecipeDetail {
   id: number;
@@ -25,13 +26,57 @@ interface RecipeDetail {
 }
 
 async function getRecipe(slug: string): Promise<RecipeDetail | null> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
   try {
-    const res = await fetch(`${baseUrl}/api/recipes/${slug}`, {
-      cache: 'no-store',
-    });
-    if (!res.ok) return null;
-    return await res.json();
+    const recipeRes = await query(
+      `
+      SELECT 
+        r.id, 
+        r.slug, 
+        r.title, 
+        r.khmer_title as "khmerTitle", 
+        r.description, 
+        r.prep_time as "prepTime", 
+        r.cook_time as "cookTime", 
+        r.servings, 
+        r.category_slug as "categorySlug",
+        c.name as "categoryName",
+        r.image_url as "imageUrl", 
+        r.ingredients, 
+        r.instructions, 
+        r.tools, 
+        r.is_featured as "isFeatured",
+        r.created_at as "createdAt"
+      FROM recipes r
+      LEFT JOIN categories c ON c.slug = r.category_slug
+      WHERE LOWER(r.slug) = $1
+      `,
+      [slug.toLowerCase()]
+    );
+
+    if (recipeRes.rows.length === 0) {
+      return null;
+    }
+
+    const recipe = recipeRes.rows[0];
+
+    // Fetch reviews for this recipe directly from PostgreSQL DB
+    const reviewsRes = await query(
+      `
+      SELECT 
+        id, 
+        author, 
+        rating, 
+        comment, 
+        created_at as "createdAt"
+      FROM reviews
+      WHERE recipe_id = $1
+      ORDER BY created_at DESC
+      `,
+      [recipe.id]
+    );
+
+    recipe.reviews = reviewsRes.rows;
+    return recipe;
   } catch (error) {
     console.error('Error fetching recipe slug:', error);
     return null;
@@ -55,7 +100,7 @@ export default async function RecipeDetailPage({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <Link
           href="/recipes"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-amber-600 bg-white border border-slate-200 px-4 py-2 rounded-2xl shadow-sm hover:shadow transition-all"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-amber-600 bg-white border border-slate-200 px-4 py-2 rounded-2xl shadow-sm hover:shadow transition-all font-khmer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to All Recipes</span>
@@ -73,7 +118,7 @@ export default async function RecipeDetailPage({
               alt={recipe.title}
               className="w-full h-full object-cover"
             />
-            <div className="absolute top-4 left-4">
+            <div className="absolute top-4 left-4 font-khmer">
               <Link
                 href={`/recipes?category=${recipe.categorySlug}`}
                 className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/90 text-slate-900 backdrop-blur-md shadow-sm border border-white/50 hover:bg-amber-500 hover:text-slate-950 transition-colors"
@@ -94,13 +139,13 @@ export default async function RecipeDetailPage({
               <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
                 {recipe.title}
               </h1>
-              <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
+              <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-khmer">
                 {recipe.description}
               </p>
             </div>
 
             {/* Badges Bar */}
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-100">
+            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-100 font-khmer">
               <div className="bg-amber-50 p-4 rounded-2xl border border-amber-100/80 text-center">
                 <Clock className="w-5 h-5 text-amber-600 mx-auto mb-1" />
                 <span className="text-xs uppercase tracking-wider font-semibold text-slate-500 block">
@@ -149,7 +194,7 @@ export default async function RecipeDetailPage({
           </div>
 
           {/* Right Column: Ingredients Checklist & Kitchen Tools */}
-          <div className="space-y-8">
+          <div className="space-y-8 font-khmer">
             <IngredientList ingredients={recipe.ingredients || []} />
 
             {/* Kitchen Tools Card */}
