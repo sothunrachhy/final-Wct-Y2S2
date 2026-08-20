@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import RecipeCard, { Recipe } from '@/components/RecipeCard';
-import { Search, ArrowRight } from 'lucide-react';
+import { Search, ArrowRight, X } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 interface Category {
@@ -113,23 +113,24 @@ export default function HomePage() {
             {t.heroDesc}
           </p>
 
-          {/* Search Input Box */}
+          {/* Animated Interactive Search Input Box */}
           <div className="pt-2 max-w-xl mx-auto">
-            <div className="relative flex items-center">
-              <Search className="w-5 h-5 text-slate-400 absolute left-4 pointer-events-none" />
+            <div className="relative flex items-center group">
+              <Search className="w-5 h-5 text-slate-400 group-focus-within:text-amber-500 group-focus-within:scale-110 transition-all duration-300 absolute left-4 pointer-events-none z-10" />
               <input
                 type="text"
                 placeholder={t.searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/95 backdrop-blur-md shadow-2xl border border-white/40 text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400 text-base placeholder:text-slate-400 font-khmer"
+                className="w-full pl-12 pr-10 py-4 rounded-2xl bg-white/95 backdrop-blur-md shadow-2xl border border-white/40 text-slate-900 focus:outline-none focus:ring-4 focus:ring-amber-400/30 focus:border-amber-400 focus:scale-[1.01] transition-all duration-300 text-base placeholder:text-slate-400 font-khmer"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-4 text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-md text-slate-600 font-khmer"
+                  className="absolute right-3.5 p-1 rounded-full bg-slate-100 hover:bg-amber-100 hover:text-amber-800 text-slate-500 transition-all duration-200 animate-in fade-in zoom-in-75"
+                  aria-label="Clear Search"
                 >
-                  Clear
+                  <X className="w-4 h-4" />
                 </button>
               )}
             </div>
@@ -168,7 +169,7 @@ export default function HomePage() {
                   onClick={() => setSelectedCategory('all')}
                   className={`flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-semibold transition-all ${
                     selectedCategory === 'all'
-                      ? 'bg-amber-500 text-slate-950 shadow-sm font-bold'
+                      ? 'bg-amber-500 text-slate-950 shadow-sm font-bold scale-[1.02]'
                       : 'text-slate-700 hover:bg-slate-100'
                   }`}
                 >
@@ -184,7 +185,7 @@ export default function HomePage() {
                     onClick={() => setSelectedCategory(cat.slug)}
                     className={`flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-medium transition-all ${
                       selectedCategory === cat.slug
-                        ? 'bg-amber-500 text-slate-950 font-bold shadow-sm'
+                        ? 'bg-amber-500 text-slate-950 font-bold shadow-sm scale-[1.02]'
                         : 'text-slate-700 hover:bg-slate-100'
                     }`}
                   >
@@ -233,7 +234,7 @@ export default function HomePage() {
                 ))}
               </div>
             ) : filteredRecipes.length === 0 ? (
-              <div className="bg-white rounded-3xl p-12 text-center border border-slate-200/80 space-y-4 font-khmer">
+              <div className="bg-white rounded-3xl p-12 text-center border border-slate-200/80 space-y-4 font-khmer animate-in fade-in duration-300">
                 <h3 className="font-serif text-xl font-bold text-slate-800">
                   {language === 'km' ? 'មិនមានរូបមន្តម្ហូបទេ' : 'No recipes found'}
                 </h3>
@@ -251,7 +252,7 @@ export default function HomePage() {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-300">
                 {filteredRecipes.map((recipe) => (
                   <RecipeCard key={recipe.id} recipe={recipe} />
                 ))}

@@ -3,7 +3,7 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import RecipeCard, { Recipe } from '@/components/RecipeCard';
-import { Search, Utensils } from 'lucide-react';
+import { Search, Utensils, X } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 function RecipesContent() {
@@ -74,20 +74,29 @@ function RecipesContent() {
         </p>
       </div>
 
-      {/* Filter and Search Bar */}
+      {/* Filter and Animated Search Bar */}
       <div className="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200/80 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           
-          {/* Search Input */}
-          <div className="relative w-full sm:w-80">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />
+          {/* Search Input with Focus Glow & Icon Scaling */}
+          <div className="relative w-full sm:w-80 group">
+            <Search className="w-4 h-4 text-slate-400 group-focus-within:text-amber-500 group-focus-within:scale-110 transition-all duration-300 absolute left-3.5 top-3.5 pointer-events-none z-10" />
             <input
               type="text"
               placeholder={t.searchPlaceholder}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 font-khmer"
+              className="w-full pl-10 pr-9 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:ring-4 focus:ring-amber-500/20 focus:border-amber-500 focus:scale-[1.01] transition-all duration-300 font-khmer"
             />
+            {search && (
+              <button
+                onClick={() => setSearch('')}
+                className="absolute right-3 top-2.5 p-1 rounded-full bg-slate-200 hover:bg-amber-100 hover:text-amber-800 text-slate-600 transition-all duration-200 animate-in fade-in zoom-in-75"
+                aria-label="Clear Search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
 
           {/* Category Tabs */}
@@ -98,7 +107,7 @@ function RecipesContent() {
                 onClick={() => handleCategorySelect(cat)}
                 className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shrink-0 ${
                   activeCategory === cat
-                    ? 'bg-amber-500 text-slate-950 shadow-sm'
+                    ? 'bg-amber-500 text-slate-950 shadow-sm scale-105'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
@@ -118,7 +127,7 @@ function RecipesContent() {
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="bg-white rounded-3xl p-12 text-center border border-slate-200/80 space-y-4 font-khmer">
+        <div className="bg-white rounded-3xl p-12 text-center border border-slate-200/80 space-y-4 font-khmer animate-in fade-in duration-300">
           <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400">
             <Utensils className="w-8 h-8" />
           </div>
@@ -136,7 +145,7 @@ function RecipesContent() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-300">
           {filtered.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
