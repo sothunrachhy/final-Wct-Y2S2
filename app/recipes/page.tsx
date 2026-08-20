@@ -99,21 +99,24 @@ function RecipesContent() {
             )}
           </div>
 
-          {/* Category Tabs */}
-          <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 font-khmer">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => handleCategorySelect(cat)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shrink-0 ${
-                  activeCategory === cat
-                    ? 'bg-amber-500 text-slate-950 shadow-sm scale-105'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                {cat === 'all' ? t.allRecipes : getCategoryName(cat, cat)}
-              </button>
-            ))}
+          {/* Category Tabs - Clean Text with Bottom Accent Line Indicator */}
+          <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 font-khmer">
+            {categories.map((cat) => {
+              const active = activeCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => handleCategorySelect(cat)}
+                  className={`relative px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all shrink-0 rounded-xl ${
+                    active
+                      ? 'text-amber-600 font-bold bg-amber-50/80 border-b-2 border-amber-500'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                  }`}
+                >
+                  {cat === 'all' ? t.allRecipes : getCategoryName(cat, cat)}
+                </button>
+              );
+            })}
           </div>
 
         </div>

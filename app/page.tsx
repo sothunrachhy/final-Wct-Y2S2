@@ -157,7 +157,7 @@ export default function HomePage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
-          {/* Sidebar / Category Filter Container */}
+          {/* Sidebar / Category Filter Container - Clean Text + Bottom Line Indicator */}
           <aside className="lg:col-span-1 space-y-6">
             <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-4 font-khmer">
               <div className="font-serif text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 font-khmer">
@@ -167,34 +167,41 @@ export default function HomePage() {
               <div className="flex flex-col space-y-1">
                 <button
                   onClick={() => setSelectedCategory('all')}
-                  className={`flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-semibold transition-all ${
+                  className={`relative flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-all ${
                     selectedCategory === 'all'
-                      ? 'bg-amber-500 text-slate-950 shadow-sm font-bold scale-[1.02]'
-                      : 'text-slate-700 hover:bg-slate-100'
+                      ? 'text-amber-600 font-bold bg-amber-50/80 border-l-4 border-amber-500 pl-3.5'
+                      : 'text-slate-700 hover:bg-slate-100 font-medium'
                   }`}
                 >
                   <span>{t.allRecipes}</span>
-                  <span className="text-xs bg-white/40 px-2.5 py-0.5 rounded-full font-bold">
+                  <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold ${
+                    selectedCategory === 'all' ? 'bg-amber-500 text-slate-950' : 'bg-slate-100 text-slate-600'
+                  }`}>
                     {recipes.length}
                   </span>
                 </button>
 
-                {categories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setSelectedCategory(cat.slug)}
-                    className={`flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-medium transition-all ${
-                      selectedCategory === cat.slug
-                        ? 'bg-amber-500 text-slate-950 font-bold shadow-sm scale-[1.02]'
-                        : 'text-slate-700 hover:bg-slate-100'
-                    }`}
-                  >
-                    <span className="capitalize">{getCategoryName(cat.slug, cat.name)}</span>
-                    <span className="text-xs bg-slate-100 px-2.5 py-0.5 rounded-full text-slate-600 font-bold">
-                      {cat.count}
-                    </span>
-                  </button>
-                ))}
+                {categories.map((cat) => {
+                  const active = selectedCategory === cat.slug;
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => setSelectedCategory(cat.slug)}
+                      className={`relative flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-all ${
+                        active
+                          ? 'text-amber-600 font-bold bg-amber-50/80 border-l-4 border-amber-500 pl-3.5'
+                          : 'text-slate-700 hover:bg-slate-100 font-medium'
+                      }`}
+                    >
+                      <span className="capitalize">{getCategoryName(cat.slug, cat.name)}</span>
+                      <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold ${
+                        active ? 'bg-amber-500 text-slate-950' : 'bg-slate-100 text-slate-600'
+                      }`}>
+                        {cat.count}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
