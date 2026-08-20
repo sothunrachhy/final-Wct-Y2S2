@@ -72,7 +72,6 @@ export default function Footer() {
 
         <div className="border-t border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4 font-khmer">
           <p>© {new Date().getFullYear()} KhmerRecipes. {t.rightsReserved}</p>
-          <p className="text-amber-400/90 font-medium">{t.createdBy}</p>
         </div>
       </div>
     </footer>

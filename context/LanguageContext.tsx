@@ -42,8 +42,7 @@ export const dictionary = {
     yourReview: 'Your Review',
     submitReview: 'Submit Review',
     footerTagline: 'Discover, cook, and enjoy authentic Cambodian cuisine.',
-    rightsReserved: 'All rights reserved.',
-    createdBy: 'Created by Sothun Rachhy for ITE Coursework.',
+    rightsReserved: 'All rights reserved by Sothun Rachhy.',
   },
   km: {
     home: 'ទំព័រដើម',
@@ -74,8 +73,7 @@ export const dictionary = {
     yourReview: 'មតិយោបល់របស់អ្នក',
     submitReview: 'បញ្ជូនមតិយោបល់',
     footerTagline: 'ស្វែងរក ចម្អិន និងរីករាយជាមួយម្ហូបខ្មែរដើមពិតៗ។',
-    rightsReserved: 'រក្សាសិទ្ធិគ្រប់យ៉ាង។',
-    createdBy: 'បង្កើតឡើងដោយ Sothun Rachhy សម្រាប់កិច្ចការសិក្សា ITE។',
+    rightsReserved: 'រក្សាសិទ្ធិគ្រប់យ៉ាងដោយ Sothun Rachhy។',
   }
 };
 
