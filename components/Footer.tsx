@@ -70,8 +70,12 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Footer Bottom Bar with "Sothun Rachhy" in crisp white text */}
         <div className="border-t border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4 font-khmer">
-          <p>© {new Date().getFullYear()} KhmerRecipes. {t.rightsReserved}</p>
+          <p>
+            © {new Date().getFullYear()} KhmerRecipes. {language === 'km' ? 'រក្សាសិទ្ធិគ្រប់យ៉ាងដោយ' : 'All rights reserved by'}{' '}
+            <span className="text-white font-semibold">Sothun Rachhy</span>.
+          </p>
         </div>
       </div>
     </footer>
