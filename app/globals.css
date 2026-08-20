@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Battambang:wght@400;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-roboto: 'Roboto', sans-serif;
+    --font-playfair: 'Playfair Display', serif;
+    --font-battambang: 'Battambang', sans-serif;
+  }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    @apply bg-slate-50 text-slate-900 antialiased selection:bg-amber-400 selection:text-slate-950 min-h-screen flex flex-col;
+  }
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.glass-card {
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+/* Clean, crisp background style */
+.hero-clean {
+  background: #ffffff;
+}
+
+.text-amber-accent {
+  color: #d97706;
+}
