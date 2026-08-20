@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import RecipeCard, { Recipe } from '@/components/RecipeCard';
-import { Search, ArrowRight, X } from 'lucide-react';
+import { Search, ArrowRight, X, Utensils } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 interface Category {
@@ -157,7 +157,7 @@ export default function HomePage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
-          {/* Sidebar / Category Filter Container - Clean Text + Bottom Line Indicator */}
+          {/* Sidebar / Category Filter Container */}
           <aside className="lg:col-span-1 space-y-6">
             <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-4 font-khmer">
               <div className="font-serif text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 font-khmer">
@@ -205,18 +205,23 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Quick Banner */}
-            <div className="bg-slate-900 text-white rounded-3xl p-6 shadow-md space-y-4 font-khmer">
-              <h4 className="font-serif text-lg font-bold">{t.haveRecipe}</h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                {t.shareRecipe}
-              </p>
+            {/* Redesigned Clean Warm Quick Banner */}
+            <div className="bg-gradient-to-br from-amber-50/90 via-orange-50/60 to-amber-100/40 rounded-3xl p-6 border border-amber-200/80 shadow-sm space-y-4 font-khmer">
+              <div className="w-10 h-10 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center shadow-md shadow-amber-500/20">
+                <Utensils className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="font-serif text-lg font-bold text-slate-900">{t.haveRecipe}</h4>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  {t.shareRecipe}
+                </p>
+              </div>
               <Link
                 href="/recipes/new"
-                className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2.5 bg-amber-500 text-slate-950 rounded-xl hover:bg-amber-400 transition-colors w-full justify-center"
+                className="inline-flex items-center gap-2 text-xs font-bold px-4 py-3 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-all w-full justify-center shadow-md hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span>{t.submitRecipe}</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 text-amber-400" />
               </Link>
             </div>
           </aside>
