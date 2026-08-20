@@ -58,21 +58,27 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1 font-khmer">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  isActive(link.href)
-                    ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+          {/* Desktop Navigation Links - Clean Text with Bottom Colored Line Indicator */}
+          <nav className="hidden md:flex items-center gap-8 font-khmer">
+            {navLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`relative py-2 text-base font-medium transition-all ${
+                    active
+                      ? 'text-amber-600 font-bold'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  <span>{link.label}</span>
+                  {active && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-500 rounded-full animate-in fade-in zoom-in-50 duration-200" />
+                  )}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Action Buttons: Language Switcher Dropdown & Add Recipe */}
@@ -167,7 +173,7 @@ export default function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
               className={`block px-4 py-3 rounded-xl text-base font-medium transition-colors font-khmer ${
                 isActive(link.href)
-                  ? 'bg-amber-500 text-slate-950 font-bold'
+                  ? 'bg-amber-50 text-amber-900 font-bold'
                   : 'text-slate-700 hover:bg-slate-100'
               }`}
             >
