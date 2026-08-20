@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { UtensilsCrossed } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function Footer() {
@@ -13,11 +14,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <img
-                src="/assets/logo.svg"
-                alt="Khmer Recipes Logo"
-                className="w-9 h-9 rounded-2xl shadow-md"
-              />
+              <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-white shadow-md shadow-amber-500/20">
+                <UtensilsCrossed className="w-4 h-4" />
+              </div>
               <span className="font-serif text-2xl font-bold text-white">
                 Khmer<span className="text-amber-500">Recipes</span>
               </span>

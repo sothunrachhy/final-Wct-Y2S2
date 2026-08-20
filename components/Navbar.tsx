@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ChevronDown, Check } from 'lucide-react';
+import { UtensilsCrossed, Menu, X, ChevronDown, Check } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { USFlag, CambodiaFlag } from '@/components/Flags';
 
@@ -45,11 +45,9 @@ export default function Navbar() {
           
           {/* Brand Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <img
-              src="/assets/logo.svg"
-              alt="Khmer Recipes Logo"
-              className="w-10 h-10 rounded-2xl shadow-md shadow-orange-500/20 group-hover:scale-105 transition-transform"
-            />
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-white shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
+              <UtensilsCrossed className="w-5 h-5" />
+            </div>
             <div>
               <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-slate-900 block leading-none">
                 Khmer<span className="text-amber-600">Recipes</span>
