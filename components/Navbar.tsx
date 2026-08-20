@@ -3,8 +3,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { UtensilsCrossed, Menu, X, ChevronDown, Check } from 'lucide-react';
-import { useLanguage, Language } from '@/context/LanguageContext';
+import { Menu, X, ChevronDown, Check } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 import { USFlag, CambodiaFlag } from '@/components/Flags';
 
 export default function Navbar() {
@@ -45,21 +45,23 @@ export default function Navbar() {
           
           {/* Brand Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-white shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
-              <UtensilsCrossed className="w-5 h-5" />
-            </div>
+            <img
+              src="/assets/logo.svg"
+              alt="Khmer Recipes Logo"
+              className="w-10 h-10 rounded-2xl shadow-md shadow-orange-500/20 group-hover:scale-105 transition-transform"
+            />
             <div>
               <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-slate-900 block leading-none">
                 Khmer<span className="text-amber-600">Recipes</span>
               </span>
-              <span className="text-[10px] font-semibold text-slate-500 tracking-wide uppercase mt-1 block">
-                Simply Authentic Cuisine
+              <span className="text-[10px] font-semibold text-slate-500 tracking-wide uppercase mt-1 block font-khmer">
+                {language === 'km' ? 'រូបមន្តម្ហូបខ្មែរងាយៗ' : 'Simply Authentic Cuisine'}
               </span>
             </div>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-1 font-khmer">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -78,7 +80,7 @@ export default function Navbar() {
           {/* Action Buttons: Language Switcher Dropdown & Add Recipe */}
           <div className="hidden md:flex items-center gap-3">
             
-            {/* Language Selector Pill with SVG Flag & Chevron (Matches User Screenshot) */}
+            {/* Language Selector Pill */}
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
@@ -129,7 +131,7 @@ export default function Navbar() {
 
             <Link
               href="/recipes/new"
-              className="px-4 py-2 rounded-full bg-slate-900 text-white hover:bg-slate-800 text-sm font-medium shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="px-4 py-2 rounded-full bg-slate-900 text-white hover:bg-slate-800 text-sm font-medium shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] font-khmer"
             >
               {t.addRecipe}
             </Link>
@@ -165,7 +167,7 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               onClick={() => setMobileMenuOpen(false)}
-              className={`block px-4 py-3 rounded-xl text-base font-medium transition-colors ${
+              className={`block px-4 py-3 rounded-xl text-base font-medium transition-colors font-khmer ${
                 isActive(link.href)
                   ? 'bg-amber-500 text-slate-950 font-bold'
                   : 'text-slate-700 hover:bg-slate-100'
@@ -174,7 +176,7 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          <div className="pt-2 border-t border-slate-100 space-y-2">
+          <div className="pt-2 border-t border-slate-100 space-y-2 font-khmer">
             <Link
               href="/recipes/new"
               onClick={() => setMobileMenuOpen(false)}
