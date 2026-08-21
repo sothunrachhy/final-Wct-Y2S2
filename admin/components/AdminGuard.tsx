@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
@@ -20,13 +20,24 @@ import AdminHeader from '@/components/AdminHeader';
 
 export default function AdminGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, login, loading } = useAuth();
-  const { lang, t } = useLanguage();
+  const { lang } = useLanguage();
 
   const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('admin');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Auto-reload window if browser holds stale Vercel build JS chunks
+  useEffect(() => {
+    const handleChunkError = (e: ErrorEvent) => {
+      if (e.message && (e.message.includes('Loading chunk') || e.message.includes('Script error'))) {
+        window.location.reload();
+      }
+    };
+    window.addEventListener('error', handleChunkError);
+    return () => window.removeEventListener('error', handleChunkError);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
