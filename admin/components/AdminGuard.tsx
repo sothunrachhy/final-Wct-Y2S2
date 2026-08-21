@@ -4,16 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
-  ShieldCheck, 
   User, 
   Lock, 
   Eye, 
   EyeOff, 
-  ArrowRight, 
   Loader2, 
   AlertCircle,
-  UtensilsCrossed,
-  KeyRound
+  UtensilsCrossed
 } from 'lucide-react';
 import AdminSidebar from '@/components/AdminSidebar';
 import AdminHeader from '@/components/AdminHeader';
@@ -69,50 +66,38 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
     return (
       <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#f8fafc] text-slate-600 font-khmer">
         <Loader2 className="w-10 h-10 animate-spin text-amber-600 mb-3" />
-        <p className="text-sm font-semibold text-slate-500">Loading Admin Portal...</p>
+        <p className="text-sm font-semibold text-slate-500">Loading...</p>
       </div>
     );
   }
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950/40 p-4 font-roboto relative overflow-hidden">
+      <div className="min-h-screen w-full flex items-center justify-center bg-slate-950 p-4 font-roboto relative overflow-hidden">
         
-        {/* Glowing Ambient Background Orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+        {/* Soft Ambient Radial Glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-amber-900/20 via-slate-950 to-slate-950 pointer-events-none" />
 
-        <div className="w-full max-w-md bg-white/95 backdrop-blur-xl rounded-3xl border border-slate-200/80 shadow-2xl p-8 space-y-7 relative z-10 animate-in fade-in-50 zoom-in-95 duration-300">
+        <div className="w-full max-w-md bg-white rounded-3xl border border-slate-100 shadow-2xl p-8 space-y-6 relative z-10 animate-in fade-in-50 zoom-in-95 duration-200">
           
-          {/* Header & Logo */}
+          {/* Brand Logo & Header */}
           <div className="text-center space-y-3">
-            <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-white shadow-lg shadow-amber-500/30 mx-auto transform hover:scale-105 transition-transform">
-              <UtensilsCrossed className="w-8 h-8 text-white" />
+            <div className="w-14 h-14 rounded-2xl bg-amber-500 flex items-center justify-center text-white shadow-md shadow-amber-500/20 mx-auto">
+              <UtensilsCrossed className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center justify-center gap-2">
+              <h1 className="text-2xl font-black text-slate-900 tracking-tight">
                 Khmer<span className="text-amber-600">Recipes</span>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-extrabold uppercase tracking-wide border border-amber-200">
-                  Admin
-                </span>
               </h1>
               <p className="text-xs text-slate-500 font-medium mt-1 font-khmer">
-                {lang === 'km' ? 'សូមចូលប្រើប្រាស់គណនីគ្រប់គ្រងទិន្នន័យ' : 'Sign in to access recipe control dashboard'}
+                {lang === 'km' ? 'សូមចូលប្រើប្រាស់គណនីគ្រប់គ្រងទិន្នន័យ' : 'Sign in to access admin portal'}
               </p>
             </div>
           </div>
 
-          {/* Quick Demo Credentials Info Banner */}
-          <div className="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/80 flex items-start gap-3 text-xs text-amber-900">
-            <KeyRound className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-            <div>
-              <p className="font-bold font-khmer">
-                {lang === 'km' ? 'គណនីសាកល្បង៖' : 'Demo Credentials:'}
-              </p>
-              <p className="mt-0.5 text-[11px] font-mono text-amber-800">
-                Username: <span className="font-bold underline">admin</span> | Password: <span className="font-bold underline">admin</span>
-              </p>
-            </div>
+          {/* Clean Demo Info Note */}
+          <div className="px-4 py-2.5 rounded-2xl bg-amber-50 border border-amber-200/80 text-center text-xs text-amber-900 font-medium">
+            Username: <span className="font-bold">admin</span> &bull; Password: <span className="font-bold">admin</span>
           </div>
 
           {/* Error Alert */}
@@ -182,28 +167,21 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
                 />
                 <span>{lang === 'km' ? 'ចងចាំខ្ញុំ' : 'Remember me'}</span>
               </label>
-              <span className="text-slate-400 font-medium font-khmer text-[11px]">
-                {lang === 'km' ? 'សុវត្ថិភាពខ្ពស់' : 'Protected Mode'}
-              </span>
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-amber-950 text-white font-bold text-sm shadow-lg shadow-slate-900/20 hover:from-slate-800 hover:to-amber-900 transition-all flex items-center justify-center gap-2 transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-70 font-khmer mt-2"
+              className="w-full py-3.5 px-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-70 font-khmer mt-2"
             >
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
-                  <span>{lang === 'km' ? 'កំពុងផ្ទៀងផ្ទាត់...' : 'Authenticating...'}</span>
+                  <span>{lang === 'km' ? 'កំពុងចូល...' : 'Signing in...'}</span>
                 </>
               ) : (
-                <>
-                  <ShieldCheck className="w-4 h-4 text-amber-400" />
-                  <span>{lang === 'km' ? 'ចូលប្រព័ន្ធ' : 'Sign In to Portal'}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
+                <span>{lang === 'km' ? 'ចូលប្រព័ន្ធ' : 'Sign In'}</span>
               )}
             </button>
           </form>
