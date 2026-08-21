@@ -1,4 +1,9 @@
-const MAIN_APP_URL = process.env.NEXT_PUBLIC_MAIN_APP_URL || 'http://localhost:3000';
+const MAIN_APP_URL = 
+  process.env.NEXT_PUBLIC_MAIN_APP_URL || 
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000' 
+    : 'https://wct-final.rachhy.online');
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_MAIN_APP_API || `${MAIN_APP_URL}/api`;
 
 export async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -25,7 +30,7 @@ export async function fetchApi<T>(endpoint: string, options: RequestInit = {}): 
 
 /**
  * Resolves image URLs so relative paths like `/assets/recipes/...` 
- * point directly to the main application running on port 3000.
+ * point directly to the main application running on https://wct-final.rachhy.online.
  */
 export function getImageUrl(url: string | undefined): string {
   if (!url || url.trim() === '') {
