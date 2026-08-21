@@ -8,14 +8,13 @@ export async function OPTIONS() {
 
 export async function GET(
   request: Request,
-  { params }: { params: { slug: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const slugOrId = params.slug;
-    const isNumeric = /^\d+$/.test(slugOrId);
+    const idOrSlug = params.id;
+    const isNumeric = /^\d+$/.test(idOrSlug);
 
-    const recipeRes = await query(
-      `
+    const sql = `
       SELECT 
         r.id, 
         r.slug, 
@@ -36,35 +35,14 @@ export async function GET(
       FROM recipes r
       LEFT JOIN categories c ON c.slug = r.category_slug
       WHERE ${isNumeric ? 'r.id = $1' : 'LOWER(r.slug) = $1'}
-      `,
-      [isNumeric ? parseInt(slugOrId) : slugOrId.toLowerCase()]
-    );
+    `;
 
-    if (recipeRes.rows.length === 0) {
+    const res = await query(sql, [isNumeric ? parseInt(idOrSlug) : idOrSlug.toLowerCase()]);
+    if (res.rows.length === 0) {
       return NextResponse.json({ error: 'Recipe not found' }, { status: 404, headers: corsHeaders() });
     }
 
-    const recipe = recipeRes.rows[0];
-
-    // Fetch reviews for this recipe
-    const reviewsRes = await query(
-      `
-      SELECT 
-        id, 
-        author, 
-        rating, 
-        comment, 
-        created_at as "createdAt"
-      FROM reviews
-      WHERE recipe_id = $1
-      ORDER BY created_at DESC
-      `,
-      [recipe.id]
-    );
-
-    recipe.reviews = reviewsRes.rows;
-
-    return NextResponse.json(recipe, { headers: corsHeaders() });
+    return NextResponse.json(res.rows[0], { headers: corsHeaders() });
   } catch (error) {
     console.error('Error fetching recipe:', error);
     return NextResponse.json({ error: 'Failed to fetch recipe' }, { status: 500, headers: corsHeaders() });
@@ -73,11 +51,13 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { slug: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const slugOrId = params.slug;
-    const isNumeric = /^\d+$/.test(slugOrId);
+    const recipeId = parseInt(params.id);
+    if (isNaN(recipeId)) {
+      return NextResponse.json({ error: 'Invalid recipe ID' }, { status: 400, headers: corsHeaders() });
+    }
 
     const body = await request.json();
     const {
@@ -95,11 +75,8 @@ export async function PUT(
       isFeatured,
     } = body;
 
-    let categoryId = null;
-    if (categorySlug) {
-      const catRes = await query(`SELECT id FROM categories WHERE slug = $1`, [categorySlug]);
-      categoryId = catRes.rows[0]?.id || null;
-    }
+    const catRes = await query(`SELECT id FROM categories WHERE slug = $1`, [categorySlug]);
+    const categoryId = catRes.rows[0]?.id || null;
 
     const res = await query(
       `
@@ -118,24 +95,24 @@ export async function PUT(
         instructions = COALESCE($11, instructions),
         tools = COALESCE($12, tools),
         is_featured = COALESCE($13, is_featured)
-      WHERE ${isNumeric ? 'id = $14' : 'LOWER(slug) = $14'}
+      WHERE id = $14
       RETURNING *
       `,
       [
-        title ?? null,
-        khmerTitle ?? null,
-        description ?? null,
+        title,
+        khmerTitle,
+        description,
         prepTime ? parseInt(prepTime) : null,
         cookTime ? parseInt(cookTime) : null,
-        servings ?? null,
+        servings,
         categoryId,
-        categorySlug ?? null,
-        imageUrl ?? null,
+        categorySlug,
+        imageUrl,
         ingredients ? JSON.stringify(ingredients) : null,
         instructions ? JSON.stringify(instructions) : null,
         tools ? JSON.stringify(tools) : null,
         isFeatured !== undefined ? Boolean(isFeatured) : null,
-        isNumeric ? parseInt(slugOrId) : slugOrId.toLowerCase(),
+        recipeId,
       ]
     );
 
@@ -152,22 +129,20 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { slug: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const slugOrId = params.slug;
-    const isNumeric = /^\d+$/.test(slugOrId);
+    const recipeId = parseInt(params.id);
+    if (isNaN(recipeId)) {
+      return NextResponse.json({ error: 'Invalid recipe ID' }, { status: 400, headers: corsHeaders() });
+    }
 
-    const res = await query(
-      `DELETE FROM recipes WHERE ${isNumeric ? 'id = $1' : 'LOWER(slug) = $1'} RETURNING id`,
-      [isNumeric ? parseInt(slugOrId) : slugOrId.toLowerCase()]
-    );
-
+    const res = await query(`DELETE FROM recipes WHERE id = $1 RETURNING id`, [recipeId]);
     if (res.rows.length === 0) {
       return NextResponse.json({ error: 'Recipe not found' }, { status: 404, headers: corsHeaders() });
     }
 
-    return NextResponse.json({ message: 'Recipe deleted successfully', id: res.rows[0].id }, { headers: corsHeaders() });
+    return NextResponse.json({ message: 'Recipe deleted successfully', id: recipeId }, { headers: corsHeaders() });
   } catch (error) {
     console.error('Error deleting recipe:', error);
     return NextResponse.json({ error: 'Failed to delete recipe' }, { status: 500, headers: corsHeaders() });

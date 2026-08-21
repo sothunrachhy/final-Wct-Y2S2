@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
+import { corsHeaders, handleOptions } from '@/lib/cors';
+
+export async function OPTIONS() {
+  return handleOptions();
+}
 
 export async function GET(request: Request) {
   try {
@@ -13,7 +18,7 @@ export async function GET(request: Request) {
         r.id, 
         r.slug, 
         r.title, 
-        r.khmer_title, 
+        r.khmer_title as "khmerTitle", 
         r.description, 
         r.prep_time as "prepTime", 
         r.cook_time as "cookTime", 
@@ -49,10 +54,10 @@ export async function GET(request: Request) {
     sql += ` ORDER BY r.id ASC`;
 
     const res = await query(sql, params);
-    return NextResponse.json(res.rows);
+    return NextResponse.json(res.rows, { headers: corsHeaders() });
   } catch (error) {
     console.error('Error fetching recipes:', error);
-    return NextResponse.json({ error: 'Failed to fetch recipes' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch recipes' }, { status: 500, headers: corsHeaders() });
   }
 }
 
@@ -75,7 +80,7 @@ export async function POST(request: Request) {
     } = body;
 
     if (!title || !description || !categorySlug || !imageUrl) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400, headers: corsHeaders() });
     }
 
     const slug = title
@@ -114,9 +119,10 @@ export async function POST(request: Request) {
       ]
     );
 
-    return NextResponse.json(res.rows[0], { status: 201 });
+    return NextResponse.json(res.rows[0], { status: 201, headers: corsHeaders() });
   } catch (error) {
     console.error('Error creating recipe:', error);
-    return NextResponse.json({ error: 'Failed to create recipe' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to create recipe' }, { status: 500, headers: corsHeaders() });
   }
 }
+
