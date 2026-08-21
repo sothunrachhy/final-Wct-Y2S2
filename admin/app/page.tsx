@@ -23,7 +23,7 @@ interface AdminStats {
   totalRecipes: number;
   totalCategories: number;
   totalReviews: number;
-  averageRating: number;
+  averageRating: number | string;
   featuredRecipes: number;
 }
 
@@ -50,17 +50,31 @@ export default function AdminDashboardPage() {
   const loadDashboardData = async () => {
     setLoading(true);
     try {
-      const [statsData, recipesData] = await Promise.all([
-        fetchApi<AdminStats>('/admin/stats').catch(() => ({
-          totalRecipes: 0,
-          totalCategories: 0,
-          totalReviews: 0,
-          averageRating: 5.0,
-          featuredRecipes: 0,
-        })),
+      const [recipesData, categoriesData, reviewsData] = await Promise.all([
         fetchApi<Recipe[]>('/recipes').catch(() => []),
+        fetchApi<any[]>('/categories').catch(() => []),
+        fetchApi<any[]>('/reviews').catch(() => []),
       ]);
-      setStats(statsData);
+
+      const totalRecipes = recipesData.length;
+      const totalCategories = categoriesData.length;
+      const totalReviews = reviewsData.length;
+      const featuredRecipes = recipesData.filter((r) => r.isFeatured).length;
+
+      let averageRating = '5.0';
+      if (reviewsData.length > 0) {
+        const sum = reviewsData.reduce((acc, r) => acc + (r.rating || 5), 0);
+        averageRating = (sum / reviewsData.length).toFixed(1);
+      }
+
+      setStats({
+        totalRecipes,
+        totalCategories,
+        totalReviews,
+        averageRating,
+        featuredRecipes,
+      });
+
       setRecipes(recipesData);
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
@@ -150,7 +164,7 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           <div className="mt-4 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-slate-900">{stats?.averageRating ?? 5.0}</span>
+            <span className="text-3xl font-extrabold text-slate-900">{stats?.averageRating ?? '5.0'}</span>
             <span className="text-xs text-slate-500 font-medium font-roboto">/ 5.0</span>
           </div>
           <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
