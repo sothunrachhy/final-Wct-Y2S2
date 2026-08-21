@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { UtensilsCrossed, Menu, X, ChevronDown, Check, Plus } from 'lucide-react';
+import { UtensilsCrossed, Menu, X, ChevronDown, Check, Plus, User } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { USFlag, CambodiaFlag } from '@/components/Flags';
 
@@ -14,6 +14,12 @@ export default function Navbar() {
 
   const pathname = usePathname();
   const { language, setLanguage, t } = useLanguage();
+
+  const ADMIN_URL =
+    process.env.NEXT_PUBLIC_ADMIN_URL ||
+    (typeof window !== 'undefined' && window.location.hostname === 'localhost'
+      ? 'http://localhost:3001'
+      : 'https://final-wct-y2-s2-qef2.vercel.app');
 
   const navLinks = [
     { href: '/', label: t.home },
@@ -81,7 +87,7 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Action Buttons: Language Switcher Dropdown & Modern Rounded Add Recipe */}
+          {/* Action Buttons: Language Switcher, Add Recipe & Admin Portal Button */}
           <div className="hidden md:flex items-center gap-3">
             
             {/* Language Selector */}
@@ -133,7 +139,7 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Redesigned Modern Rounded Add Recipe Button */}
+            {/* Add Recipe Button */}
             <Link
               href="/recipes/new"
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 text-sm font-medium shadow-md border border-slate-800 transition-all hover:scale-[1.02] active:scale-[0.98] font-khmer"
@@ -141,6 +147,18 @@ export default function Navbar() {
               <Plus className="w-4 h-4 text-amber-400" />
               <span>{t.addRecipe}</span>
             </Link>
+
+            {/* Admin Portal Button with Human Icon */}
+            <a
+              href={ADMIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold shadow-md shadow-amber-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] font-khmer"
+              title="Open Admin Portal"
+            >
+              <User className="w-4 h-4 text-white" />
+              <span>{language === 'km' ? 'គ្រប់គ្រង' : 'Admin'}</span>
+            </a>
           </div>
 
           {/* Mobile Menu Button & Mobile Language Selector */}
@@ -191,6 +209,16 @@ export default function Navbar() {
               <Plus className="w-4 h-4 text-amber-400" />
               <span>{t.addRecipe}</span>
             </Link>
+            <a
+              href={ADMIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-amber-500 text-white font-bold shadow-sm"
+            >
+              <User className="w-4 h-4 text-white" />
+              <span>{language === 'km' ? 'គ្រប់គ្រង' : 'Admin'}</span>
+            </a>
           </div>
         </div>
       )}
