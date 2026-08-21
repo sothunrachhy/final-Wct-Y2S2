@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, Plus, ChevronDown, Check } from 'lucide-react';
+import { Search, Plus, ChevronDown, Check, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
+import { useAuth } from '@/context/AuthContext';
 import { CambodiaFlag, USFlag } from '@/components/Flags';
 
 export default function AdminHeader() {
   const { lang, setLang, t } = useLanguage();
+  const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -94,7 +96,7 @@ export default function AdminHeader() {
           )}
         </div>
 
-        {/* Create Recipe Button (Fixed padding & whitespace-nowrap) */}
+        {/* Create Recipe Button */}
         <Link
           href="/recipes/new"
           className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-bold px-5 py-2.5 rounded-2xl shadow-sm hover:shadow transition-all whitespace-nowrap shrink-0"
@@ -105,14 +107,22 @@ export default function AdminHeader() {
 
         <div className="h-6 w-px bg-slate-200 shrink-0" />
 
-        {/* Admin Profile */}
+        {/* Admin Profile & Logout Button */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-white font-extrabold text-sm shadow-md shadow-amber-500/20 font-roboto shrink-0">
-            AD
+          <div className="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-white font-extrabold text-sm shadow-md shadow-amber-500/20 font-roboto shrink-0 uppercase">
+            {user?.username?.substring(0, 2) || 'AD'}
           </div>
           <div className="hidden lg:block text-left">
             <p className="text-sm font-bold text-slate-900 leading-none">{t('userRole')}</p>
+            <p className="text-[11px] text-slate-400 font-medium mt-0.5">{user?.username || 'admin'}</p>
           </div>
+          <button
+            onClick={logout}
+            className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors ml-1"
+            title={lang === 'km' ? 'ចាកចេញ' : 'Log out'}
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </header>
