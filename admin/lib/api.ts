@@ -4,15 +4,22 @@ const MAIN_APP_URL =
     ? 'http://localhost:3000' 
     : 'https://wct-final.rachhy.online');
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_MAIN_APP_API || `${MAIN_APP_URL}/api`;
-
 export async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
   
-  const headers = {
-    'Content-Type': 'application/json',
-    ...(options.headers || {}),
+  // Use same-origin relative /api endpoint in browser so Next.js server proxy handles it with 0 CORS issues!
+  const url = typeof window !== 'undefined'
+    ? `/api${cleanEndpoint}`
+    : `${MAIN_APP_URL}/api${cleanEndpoint}`;
+
+  const headers: Record<string, string> = {
+    ...(options.headers as Record<string, string> || {}),
   };
+
+  // Only attach Content-Type if sending payload body
+  if (options.body && !headers['Content-Type']) {
+    headers['Content-Type'] = 'application/json';
+  }
 
   const response = await fetch(url, {
     ...options,
